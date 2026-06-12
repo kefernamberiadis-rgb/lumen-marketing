@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumen Flow — Cycle-Synced Wellness</title>
+<meta name="description" content="Lumen Flow is a cycle-synced wellness app for fasting, reflection, rhythm, and daily check-ins, guided by your cycle and the phases of the moon.">
+<style>
+  :root {
+    --cream: #FBF7EF;
+    --ivory: #F5EFE2;
+    --forest: #2F4733;
+    --sage: #8DA587;
+    --sage-light: #D9E3D4;
+    --amber: #C99A4B;
+    --amber-soft: #EADBC0;
+    --ink: #33392F;
+    --line: #E2D9C8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Iowan Old Style', 'Georgia', serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.6;
+  }
+
+  .sans { font-family: 'Avenir Next', 'Helvetica Neue', sans-serif; }
+
+  a { color: inherit; }
+
+  /* ===== NAV ===== */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(251,247,239,0.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .nav-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 20px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    letter-spacing: 0.5px;
+    color: var(--forest);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .logo svg { width: 28px; height: 28px; }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    font-family: 'Avenir Next', 'Helvetica Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: var(--ink);
+    opacity: 0.65;
+    transition: opacity 0.2s;
+    padding-bottom: 4px;
+    border-bottom: 1px solid transparent;
+  }
+  .nav-links a:hover, .nav-links a.active {
+    opacity: 1;
+    border-bottom-color: var(--amber);
+  }
+
+  /* ===== PAGES ===== */
+  /* ===== HERO ===== */
+  .hero {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 100px 28px 90px;
+    text-align: center;
+    position: relative;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Avenir Next', 'Helvetica Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 28px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hero-eyebrow::before, .hero-eyebrow::after {
+    content: '';
+    display: block;
+    width: 36px;
+    height: 1px;
+    background: var(--sage);
+  }
+
+  .hero h1 {
+    font-size: clamp(48px, 8vw, 88px);
+    color: var(--forest);
+    font-weight: 400;
+    letter-spacing: 1px;
+    margin-bottom: 24px;
+    line-height: 1.05;
+  }
+
+  .hero-moon {
+    display: inline-block;
+    margin: 0 6px;
+    color: var(--amber);
+    font-style: normal;
+  }
+
+  .hero-tagline {
+    font-size: clamp(19px, 2.6vw, 24px);
+    color: var(--ink);
+    opacity: 0.78;
+    max-width: 620px;
+    margin: 0 auto 48px;
+    font-style: italic;
+  }
+
+  .hero-desc {
+    max-width: 600px;
+    margin: 0 auto 56px;
+    font-size: 17px;
+    color: var(--ink);
+    opacity: 0.85;
+  }
+
+  /* ===== DOWNLOAD BUTTONS ===== */
+  .download-row {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+
+  .store-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 28px;
+    border: 1px solid var(--forest);
+    border-radius: 12px;
+    font-family: 'Avenir Next', 'Helvetica Neue', sans-serif;
+    font-size: 14px;
+    color: var(--forest);
+    text-decoration: none;
+    background: transparent;
+    transition: all 0.25s;
+    cursor: default;
+  }
+
+  .store-btn:hover {
+    background: var(--forest);
+    color: var(--cream);
+  }
+
+  .store-btn .store-icon { font-size: 20px; }
+
+  .store-btn-text { text-align: left; line-height: 1.3; }
+  .store-btn-text .small { font-size: 11px; opacity: 0.7; display: block; letter-spacing: 0.5px; }
+  .store-btn-text .big { font-size: 15px; font-weight: 600; }
+
+  .download-note {
+    font-family: 'Avenir Next', 'Helvetica Neue', sans-serif;
+    font-size: 13px;
+    color: var(--ink);
+    opacity: 0.5;
+    letter-spacing: 0.5px;
+  }
+
+  /* ===== FERN DIVIDER ===== */
+  .fern-divider {
+    display: flex;
+    justify-content: center;
+    padding: 60px 0 20px;
+    color: var(--sage);
+    opacity: 0.6;
+  }
+
+  /* ===== SECTION SHARED ===== */
+  section {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 80px 28px;
+  }
+
+  .section-label {
+    font-family: 'Avenir Next', 'Helvetica Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 16px;
+    text-align: center;
+  }
+
+  .section-title {
+    font-size: clamp(32px, 5vw, 48px);
+    color: var(--forest);
+    font-weight: 400;
+    text-align: center;
+    margin-bottom: 16px;
+    letter-spacing: 0.5px;
+  }
+
+  .section-sub {
+    text-align: center;
+    font-size: 17px;
+    color: var(--ink);
+    opacity: 0.7;
+    max-width: 540px;
+    margin: 0 auto 64px;
+    font-style: italic;
+  }
+
+  /* ===== FEATURE GRID ===== */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  .feature-card {
+    background: var(--ivory);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 32px 28px;
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 40px rgba(47,71,51,0.08);
+  }
+
+  .feature-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--sage-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+    color: var(--forest);
+  }
+
+  .feature-icon svg { width: 22px; height: 22px; }
+
+  .feature-card h3 {
+    font-size: 19px;
+    color: var(--forest);
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  .feature-card p {
+    font-family: 'Avenir Next', 'Helvetica Neue', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    opacity: 0.7;
+    line-height: 1.6;
+  }
+
+  /* ===== PHILOSOPHY BANNER ===== */
+  .philosophy {
+    background: var(--forest);
+    color: var(--cream);
+    text-align: center;
+    padding: 90px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .philosophy::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 320px;
+    height: 320px;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 50%;
+  }
+  .philosophy::after {
+    content: '';
+    position: absolute;
+    bottom: -140px;
+    left: -80px;
+    width: 280px;
+    height: 280px;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 50%;
+  }
+
+  .philosophy-inner { position: relative; z-index: 1; max-width: 640px; margin: 0 auto; }
+
+  .philosophy .moon-mark {
+    font-size: 32px;
+    color: var(--amber);
+    margin-bottom: 28px;
+    display: block;
+  }
+
+  .philosophy h2 {
+    font-size: clamp(28px, 4.5vw, 42px);
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: 0.3px;
+  }
+
+  .philosophy p.sub {
+    margin-top: 20px;
+    font-family: 'Avenir Next', 'Helvetica Neue', sans-serif;
+    font-size: 15px;
+    opacity: 0.6;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* ===== SCREENSHOTS ===== */
+  .screens-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 24px;
+    margin-top: 8px;
+  }
+
+  .screen-placeholder {
+    aspect-ratio: 9/18.5;
+    background: linear-gradient(160deg, var(--ivory), var(--sage-light));
+    border: 1px solid var(--line);
+    border-radius: 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-family: 'Avenir Next', 'Helvetica Neue', sans-serif;
+    color: var(--forest);
+    opacity: 0.55;
+    text-align: center;
+    padding: 24px;
+  }
+
+  .screen-placeholder .icon { font-size: 36px; opacity: 0.6; }
+  .screen-placeholder .label { font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; }
+
+  /* ===== CONTACT ===== */
+  .contact-box {
+    background: var(--ivory);
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    padding: 56px;
+    text-align: center;
+  }
+
+  .contact-box .moon-mark {
+    font-size: 28px;
+    color: var(--amber);
+    display: block;
+    margin-bottom: 20px;
+  }
+
+  .contact-box h3 {
+    font-size: 26px;
+    color: var(--forest);
+    font-weight: 400;
+    margin-bottom: 12px;
+  }
+
+  .contact-box p {
+    font-family: 'Avenir Next', 'Helvetica Neue', sans-serif;
+    font-size: 15px;
+    opacity: 0.7;
+    margin-bottom: 28px;
+  }
+
+  .email-pill {
+    display: inline-block;
+    font-family: 'Avenir Next', 'Helvetica Neue', sans-serif;
+    font-size: 15px;
+    color: var(--forest);
+    background: var(--cream);
+    border: 1px solid var(--sage);
+    border-radius: 50px;
+    padding: 12px 32px;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    transition: all 0.25s;
+  }
+  .email-pill:hover {
+    background: var(--forest);
+    color: var(--cream);
+    border-color: var(--forest);
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 48px 28px;
+    text-align: center;
+  }
+
+  .footer-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+
+  .footer-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--forest);
+    font-size: 17px;
+    margin-bottom: 16px;
+  }
+  .footer-logo svg { width: 20px; height: 20px; }
+
+  .footer-links {
+    display: flex;
+    gap: 28px;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-family: 'Avenir Next', 'Helvetica Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .footer-links a { text-decoration: none; opacity: 0.6; transition: opacity 0.2s; }
+  .footer-links a:hover { opacity: 1; }
+
+  footer .copy {
+    font-family: 'Avenir Next', 'Helvetica Neue', sans-serif;
+    font-size: 13px;
+    opacity: 0.45;
+  }
+
+  /* ===== INNER PAGES (Support / Privacy) ===== */
+  .page-header {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 80px 28px 40px;
+    text-align: center;
+  }
+
+  .page-header .moon-mark {
+    display: block;
+    font-size: 26px;
+    color: var(--amber);
+    margin-bottom: 24px;
+  }
+
+  .page-header h1 {
+    font-size: clamp(36px, 6vw, 56px);
+    color: var(--forest);
+    font-weight: 400;
+    margin-bottom: 16px;
+  }
+
+  .page-header p {
+    font-size: 17px;
+    opacity: 0.7;
+    font-style: italic;
+  }
+
+  .content-block {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 28px 100px;
+  }
+
+  .content-block h2 {
+    font-size: 24px;
+    color: var(--forest);
+    font-weight: 600;
+    margin: 48px 0 16px;
+    letter-spacing: 0.3px;
+  }
+
+  .content-block h2:first-child { margin-top: 0; }
+
+  .content-block p, .content-block li {
+    font-family: 'Avenir Next', 'Helvetica Neue', sans-serif;
+    font-size: 15.5px;
+    color: var(--ink);
+    opacity: 0.82;
+    margin-bottom: 14px;
+  }
+
+  .content-block ul { padding-left: 22px; margin-bottom: 14px; }
+
+  .help-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin: 32px 0;
+  }
+
+  .help-card {
+    background: var(--ivory);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 24px;
+  }
+
+  .help-card .help-icon {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--sage-light);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 12px;
+    color: var(--forest);
+  }
+  .help-card .help-icon svg { width: 18px; height: 18px; }
+
+  .help-card h3 {
+    font-size: 16px;
+    color: var(--forest);
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  .help-card p {
+    font-size: 13.5px;
+    margin-bottom: 0;
+  }
+
+  .faq-item {
+    border-bottom: 1px solid var(--line);
+    padding: 22px 0;
+  }
+  .faq-item:last-child { border-bottom: none; }
+
+  .faq-item h3 {
+    font-size: 16px;
+    color: var(--forest);
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-family: 'Avenir Next', 'Helvetica Neue', sans-serif;
+  }
+
+  .faq-item p { margin-bottom: 0; }
+
+  .privacy-divider {
+    height: 1px;
+    background: var(--line);
+    margin: 40px 0;
+    border: none;
+  }
+
+  .last-updated {
+    font-family: 'Avenir Next', 'Helvetica Neue', sans-serif;
+    font-size: 13px;
+    color: var(--sage);
+    text-align: center;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* ===== ICON CONCEPT ===== */
+  .icon-concept-wrap {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+
+  .icon-tile {
+    text-align: center;
+    font-family: 'Avenir Next', 'Helvetica Neue', sans-serif;
+  }
+
+  .icon-tile .icon-box {
+    width: 160px;
+    height: 160px;
+    border-radius: 36px;
+    background: var(--cream);
+    border: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+    box-shadow: 0 12px 32px rgba(47,71,51,0.08);
+  }
+
+  .icon-tile .icon-box svg { width: 100px; height: 100px; }
+
+  .icon-tile .icon-label {
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    opacity: 0.6;
+    color: var(--forest);
+  }
+
+  @media (max-width: 640px) {
+    .nav-links { gap: 18px; font-size: 11px; }
+    .download-row { flex-direction: column; align-items: center; }
+    .store-btn { width: 100%; max-width: 280px; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 28C8.8 28 4 23.2 4 16C4 8.8 8.8 4 16 4C13 6.5 11.5 10.5 11.5 16C11.5 21.5 13 25.5 16 28Z" fill="#2F4733"/>
+        <circle cx="22" cy="11" r="2" fill="#C99A4B"/>
+      </svg>
+      Lumen Flow
+    </a>
+    <div class="nav-links">
+      <a href="/" class="nav-home active">Home</a>
+      <a href="/support" class="nav-support">Support</a>
+      <a href="/privacy" class="nav-privacy">Privacy</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page active" id="page-home">
+
+
+  <section class="hero">
+    <div class="hero-eyebrow">A gentler kind of tracking</div>
+    <h1>Lumen<span class="hero-moon">☾</span>Flow</h1>
+    <p class="hero-tagline">Cycle-synced wellness for fasting, reflection, rhythm, and daily check-ins.</p>
+    <p class="hero-desc">
+      Lumen Flow follows the natural rhythm of your cycle and the phases of the moon —
+      gently guiding your fasting windows, daily reflections, and nourishment choices
+      so you can move with your body instead of against it.
+    </p>
+
+    <div class="download-row">
+      <span class="store-btn">
+        <span class="store-icon">🍎</span>
+        <span class="store-btn-text"><span class="small">Coming soon on the</span><span class="big">App Store</span></span>
+      </span>
+      <span class="store-btn">
+        <span class="store-icon">▶</span>
+        <span class="store-btn-text"><span class="small">Coming soon on</span><span class="big">Google Play</span></span>
+      </span>
+    </div>
+    <p class="download-note">Lumen Flow is currently in review — check back soon</p>
+  </section>
+
+  <div class="fern-divider">
+    <svg width="60" height="40" viewBox="0 0 60 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M30 38V4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+      <path d="M30 8C30 8 20 6 16 12M30 14C30 14 18 12 13 18M30 20C30 20 17 19 12 25M30 26C30 26 18 26 14 32" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+      <path d="M30 8C30 8 40 6 44 12M30 14C30 14 42 12 47 18M30 20C30 20 43 19 48 25M30 26C30 26 42 26 46 32" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+    </svg>
+  </div>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="section-label">What's inside</div>
+    <h2 class="section-title">Everything your rhythm needs</h2>
+    <p class="section-sub">Seven gentle tools, woven together around your cycle, your seasons, and your moon.</p>
+
+    <div class="feature-grid">
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><path d="M12 6.5v5.5l4 2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Cycle Tracking</h3>
+        <p>Follow your phases through the seasons of your cycle — winter, spring, summer, and autumn — with gentle guidance for each one.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3 1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 3.5v1.2M12 19.3v1.2M20.5 12h-1.2M4.7 12H3.5" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Fasting Timer</h3>
+        <p>A calm, visual fasting timer that adapts its rhythm to where you are in your cycle — no rigid windows, just gentle alignment.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 13l3 3 8-8" stroke-linecap="round" stroke-linejoin="round"/><rect x="3.5" y="4.5" width="17" height="15" rx="3"/></svg>
+        </div>
+        <h3>Daily Check-Ins</h3>
+        <p>A few quiet moments each day to note your mood, energy, sleep, and body — building a picture of your rhythm over time.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Moon Phase Guidance</h3>
+        <p>Daily moon phase tracking woven into your cycle, with small reflections and rituals to mark each phase of the lunar month.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21C12 21 4 15.5 4 9.8C4 6.6 6.4 4.5 9 4.5C10.4 4.5 11.5 5.2 12 6.2C12.5 5.2 13.6 4.5 15 4.5C17.6 4.5 20 6.6 20 9.8C20 15.5 12 21 12 21Z" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Nourish &amp; Craving Support</h3>
+        <p>Gentle suggestions for what your body might be asking for — matched to your cycle phase, not a strict meal plan.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 4h9l3 3v13a1 1 0 01-1 1H6a1 1 0 01-1-1V5a1 1 0 011-1z" stroke-linejoin="round"/><path d="M9 9h6M9 13h6M9 17h3" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Journaling &amp; Reflection</h3>
+        <p>A private space for your own words — prompts that shift with your phase, for whatever you need to set down.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19.5A2.5 2.5 0 016.5 17H20" stroke-linecap="round"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Learn</h3>
+        <p>Short, clear explanations of cycle phases, lunar rhythms, and the seasonal philosophy behind Lumen Flow.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PHILOSOPHY -->
+  <div class="philosophy">
+    <div class="philosophy-inner">
+      <span class="moon-mark">☾</span>
+      <h2>Built for gentle daily awareness, not pressure.</h2>
+      <p class="sub">No streaks to break. No scores to chase. Just rhythm.</p>
+    </div>
+  </div>
+
+  <!-- SCREENSHOTS -->
+  <section id="screens">
+    <div class="section-label">A look inside</div>
+    <h2 class="section-title">The app, in moments</h2>
+    <p class="section-sub">Screens from Lumen Flow — your cycle calendar, fasting timer, moon phase, and daily reflection.</p>
+
+    <div class="screens-row">
+      <div class="screen-placeholder">
+        <span class="icon">☾</span>
+        <span class="label">Cycle Calendar</span>
+      </div>
+      <div class="screen-placeholder">
+        <span class="icon">◔</span>
+        <span class="label">Fasting Timer</span>
+      </div>
+      <div class="screen-placeholder">
+        <span class="icon">✦</span>
+        <span class="label">Moon Phase</span>
+      </div>
+      <div class="screen-placeholder">
+        <span class="icon">✎</span>
+        <span class="label">Reflection</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="contact-box">
+      <span class="moon-mark">☾</span>
+      <h3>Questions, feedback, or support</h3>
+      <p>We read every message. Reach out any time.</p>
+      <a class="email-pill" href="mailto:cakafete@hotmail.com">cakafete@hotmail.com</a>
+    </div>
+  </section>
+
+  <!-- ICON CONCEPT -->
+  <section id="icon-concept">
+    <div class="section-label">Brand mark</div>
+    <h2 class="section-title">App icon concept</h2>
+    <p class="section-sub">A fern leaf and crescent moon on warm cream — calm, seasonal, and consistent with the app's interior.</p>
+
+    <div class="icon-concept-wrap">
+      <div class="icon-tile">
+        <div class="icon-box">
+          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0" y="0" width="200" height="200" rx="44" fill="#FBF7EF"/>
+            <!-- fern stem -->
+            <path d="M100 172 C100 172 96 110 100 40" stroke="#2F4733" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <!-- left leaflets -->
+            <path d="M99 150 C99 150 78 142 66 152" stroke="#2F4733" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+            <path d="M99 130 C99 130 74 121 60 132" stroke="#2F4733" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+            <path d="M100 108 C100 108 76 99 62 110" stroke="#2F4733" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+            <path d="M100 86 C100 86 80 78 68 88" stroke="#2F4733" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+            <path d="M100 64 C100 64 84 58 74 66" stroke="#2F4733" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <!-- right leaflets -->
+            <path d="M101 150 C101 150 122 142 134 152" stroke="#2F4733" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+            <path d="M101 130 C101 130 126 121 140 132" stroke="#2F4733" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+            <path d="M100 108 C100 108 124 99 138 110" stroke="#2F4733" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+            <path d="M100 86 C100 86 120 78 132 88" stroke="#2F4733" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+            <path d="M100 64 C100 64 116 58 126 66" stroke="#2F4733" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <!-- crescent moon -->
+            <path d="M138 56C138 70.6 126.1 82.5 111.5 82.5C108.2 82.5 105 81.9 102.1 80.7C113.1 77.5 121 67.4 121 55.5C121 43.6 113.1 33.5 102.1 30.3C105 29.1 108.2 28.5 111.5 28.5C126.1 28.5 138 40.4 138 55.5Z" fill="#C99A4B"/>
+          </svg>
+        </div>
+        <div class="icon-label">App Icon — Light</div>
+      </div>
+
+      <div class="icon-tile">
+        <div class="icon-box" style="background:#2F4733;">
+          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0" y="0" width="200" height="200" rx="44" fill="#2F4733"/>
+            <path d="M100 172 C100 172 96 110 100 40" stroke="#FBF7EF" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <path d="M99 150 C99 150 78 142 66 152" stroke="#FBF7EF" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+            <path d="M99 130 C99 130 74 121 60 132" stroke="#FBF7EF" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+            <path d="M100 108 C100 108 76 99 62 110" stroke="#FBF7EF" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+            <path d="M100 86 C100 86 80 78 68 88" stroke="#FBF7EF" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+            <path d="M100 64 C100 64 84 58 74 66" stroke="#FBF7EF" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <path d="M101 150 C101 150 122 142 134 152" stroke="#FBF7EF" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+            <path d="M101 130 C101 130 126 121 140 132" stroke="#FBF7EF" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+            <path d="M100 108 C100 108 124 99 138 110" stroke="#FBF7EF" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+            <path d="M100 86 C100 86 120 78 132 88" stroke="#FBF7EF" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+            <path d="M100 64 C100 64 116 58 126 66" stroke="#FBF7EF" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <path d="M138 56C138 70.6 126.1 82.5 111.5 82.5C108.2 82.5 105 81.9 102.1 80.7C113.1 77.5 121 67.4 121 55.5C121 43.6 113.1 33.5 102.1 30.3C105 29.1 108.2 28.5 111.5 28.5C126.1 28.5 138 40.4 138 55.5Z" fill="#C99A4B"/>
+          </svg>
+        </div>
+        <div class="icon-label">App Icon — Dark</div>
+      </div>
+    </div>
+  </section>
+
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 28C8.8 28 4 23.2 4 16C4 8.8 8.8 4 16 4C13 6.5 11.5 10.5 11.5 16C11.5 21.5 13 25.5 16 28Z" fill="#2F4733"/>
+        <circle cx="22" cy="11" r="2" fill="#C99A4B"/>
+      </svg>
+      Lumen Flow
+    </div>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/support">Support</a>
+      <a href="/privacy">Privacy</a>
+      <a href="mailto:cakafete@hotmail.com">Contact</a>
+    </div>
+    <p class="copy">© 2026 Lumen Flow. A gentler kind of tracking.</p>
+  </div>
+</footer>
+
+</body>
+</html>
